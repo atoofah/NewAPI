@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios.config";
 import ImageSkeleton from "../shared/imageSkeleton";
+import Select from "../shared/select/Select";
 import User from "./User";
 import UserDetails from "./UserDetails";
 
@@ -8,13 +9,15 @@ const Users = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userList, setUserList] = useState([]);
   const [userId, setUserId] = useState(-1);
+  const [limit, setLimit] = useState(30);
+
   useEffect(() => {
     axiosInstance
-      .get("/users?limit=300")
+      .get(`/users?limit=${limit}`)
       .then((res) => setUserList(res.data.users))
       .catch((err) => console.log(err))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [limit]);
 
   if (isLoading)
     return (
@@ -32,11 +35,19 @@ const Users = () => {
       {userId > 0 ? (
         <UserDetails id={userId} setUserId={setUserId} />
       ) : (
-        <div className="grid grid-cols-grid-layout gap-4">
-          {userList.map((user) => (
-            <User key={user.id} {...user} setUserId={setUserId} />
-          ))}
-        </div>
+        <>
+          <Select
+            id="limit"
+            label={"limit:"}
+            optionList={[30, 50, 100]}
+            onChange={(e) => setLimit(e.target.value)}
+          />
+          <div className="grid grid-cols-grid-layout gap-4">
+            {userList.map((user) => (
+              <User key={user.id} {...user} setUserId={setUserId} />
+            ))}
+          </div>
+        </>
       )}
     </>
   );
