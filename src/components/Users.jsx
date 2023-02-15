@@ -11,10 +11,20 @@ const Users = () => {
   const [userList, setUserList] = useState([]);
   const [userId, setUserId] = useState(-1);
   const [limit, setLimit] = useState(30);
+  const [queryParams, setQueryParams] = useState({
+    pi: null,
+    password: null,
+    domain: null,
+  });
+
+  const onQueryParamChanged = (e) => {
+    const { name, checked } = e.target;
+    setQueryParams({ ...queryParams, [name]: checked });
+  };
 
   useEffect(() => {
     axiosInstance
-      .get(`/users?limit=${limit}`)
+      .get(`/users?limit=${limit}&select=image,ip, password, domain`)
       .then((res) => setUserList(res.data.users))
       .catch((err) => console.log(err))
       .finally(() => setIsLoading(false));
@@ -37,7 +47,27 @@ const Users = () => {
         <UserDetails id={userId} setUserId={setUserId} />
       ) : (
         <>
-          <Checkbox />
+          <div className="flex items-center justify-center mb-5">
+            <Checkbox
+              label="IP"
+              value=""
+              onChange={onQueryParamChanged}
+              name="ip"
+            />
+            <Checkbox
+              label="Password"
+              value=""
+              onChange={onQueryParamChanged}
+              name="password"
+            />
+            <Checkbox
+              label="Domain"
+              value=""
+              onChange={onQueryParamChanged}
+              name="domain"
+            />
+          </div>
+
           <Select
             id="limit"
             label={"limit:"}
