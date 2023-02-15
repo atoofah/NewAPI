@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useQuery } from "react-query";
+import Spinner from "../shared/Spinner";
 import TextSkeleton from "../shared/TextSkeleton";
 import Post from "./Post";
 
@@ -28,11 +29,15 @@ const Posts = () => {
       </div>
     );
   return (
-    <div className="grid grid-cols-grid-layout gap-4">
-      {data?.map((item) => {
-        return <Post key={item.id} {...item} />;
-      })}
-    </div>
+    <>
+      {isFetching ? <Spinner /> : null}
+
+      <div className="grid grid-cols-grid-layout gap-4">
+        {data?.map((item) => {
+          return <Post key={item.id} {...item} />;
+        })}
+      </div>
+    </>
   );
 };
 
