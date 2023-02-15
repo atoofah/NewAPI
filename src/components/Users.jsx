@@ -12,23 +12,24 @@ const Users = () => {
   const [userId, setUserId] = useState(-1);
   const [limit, setLimit] = useState(30);
   const [queryParams, setQueryParams] = useState({
-    pi: null,
-    password: null,
-    domain: null,
+    ip: "",
+    password: "",
+    domain: "",
   });
 
   const onQueryParamChanged = (e) => {
     const { name, checked } = e.target;
-    setQueryParams({ ...queryParams, [name]: checked });
+    setQueryParams({ ...queryParams, [name]: checked ? `,${name}` : "" });
   };
 
   useEffect(() => {
+    const { ip, password, domain } = queryParams;
     axiosInstance
-      .get(`/users?limit=${limit}&select=image,ip, password, domain`)
+      .get(`/users?limit=${limit}&select=image${ip}${password}${domain}`)
       .then((res) => setUserList(res.data.users))
       .catch((err) => console.log(err))
       .finally(() => setIsLoading(false));
-  }, [limit]);
+  }, [limit, queryParams]);
 
   if (isLoading)
     return (
@@ -47,33 +48,26 @@ const Users = () => {
         <UserDetails id={userId} setUserId={setUserId} />
       ) : (
         <>
-          <div className="flex items-center justify-center mb-5">
-            <Checkbox
-              label="IP"
-              value=""
-              onChange={onQueryParamChanged}
-              name="ip"
-            />
-            <Checkbox
-              label="Password"
-              value=""
-              onChange={onQueryParamChanged}
-              name="password"
-            />
-            <Checkbox
-              label="Domain"
-              value=""
-              onChange={onQueryParamChanged}
-              name="domain"
-            />
-          </div>
-
           <Select
             id="limit"
             label={"limit:"}
             optionList={[30, 50, 100]}
             onChange={(e) => setLimit(e.target.value)}
           />
+          <div className="flex items-center justify-center mb-5 mt-5 ">
+            <Checkbox label="IP" onChange={onQueryParamChanged} name="ip" />
+            <Checkbox
+              label="Password"
+              onChange={onQueryParamChanged}
+              name="password"
+            />
+            <Checkbox
+              label="Domain"
+              onChange={onQueryParamChanged}
+              name="domain"
+            />
+          </div>
+
           <div className="grid grid-cols-grid-layout gap-4">
             {userList.map((user) => (
               <User key={user.id} {...user} setUserId={setUserId} />
