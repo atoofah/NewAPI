@@ -24,7 +24,7 @@ const Users = () => {
     const { data } = await axiosInstance.get(
       `/users?limit=${limit}&select=image${ip}${password}${domain}`
     );
-    console.log(data);
+    // console.log(data);
     return data;
   };
 
