@@ -18,6 +18,7 @@ const Users = () => {
     domain: "",
   });
 
+  // use query
   const getUserList = async () => {
     const { ip, password, domain } = queryParams;
     const { data } = await axiosInstance.get(
@@ -27,8 +28,9 @@ const Users = () => {
     return data;
   };
 
-  const { isLoading, isError, isFetching, data } = useQuery("users", () =>
-    getUserList()
+  const { isLoading, isError, isFetching, data } = useQuery(
+    ["users", queryParams, limit],
+    () => getUserList()
   );
 
   const onQueryParamChanged = (e) => {
@@ -69,16 +71,23 @@ const Users = () => {
             onChange={(e) => setLimit(e.target.value)}
           />
           <div className="flex items-center justify-center mb-5 mt-5 ">
-            <Checkbox label="IP" onChange={onQueryParamChanged} name="ip" />
+            <Checkbox
+              label="IP"
+              onChange={onQueryParamChanged}
+              name="ip"
+              checked={queryParams.ip}
+            />
             <Checkbox
               label="Password"
               onChange={onQueryParamChanged}
               name="password"
+              checked={queryParams.password}
             />
             <Checkbox
               label="Domain"
               onChange={onQueryParamChanged}
               name="domain"
+              checked={queryParams.domain}
             />
           </div>
 
