@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useQuery } from "react-query";
 import { axiosInstance } from "../api/axios.config";
 import ImageSkeleton from "../shared/imageSkeleton";
 

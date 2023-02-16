@@ -18,6 +18,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
+body {
+  padding-bottom: 100px;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
