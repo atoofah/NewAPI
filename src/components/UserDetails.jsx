@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { axiosInstance } from "../api/axios.config";
 import ImageSkeleton from "../shared/imageSkeleton";
+import CachedEmoji from "./CachedEmoji";
 
 const UserDetails = ({ id, setUserId }) => {
   // const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +15,8 @@ const UserDetails = ({ id, setUserId }) => {
   //     .catch((err) => console.log(err))
   //     .finally(() => setIsLoading(false));
   // }, []);
-
+  const queryClient = useQueryClient();
+  const isCached = queryClient.getQueryData(["user", id]);
   // use query
   const getUser = async () => {
     const { data } = await axiosInstance.get(`/users/${id}`);
@@ -29,6 +31,7 @@ const UserDetails = ({ id, setUserId }) => {
   if (isLoading) return <ImageSkeleton isCenter />;
   return (
     <div className="flex flex-col items-center">
+      <CachedEmoji isCached={isCached} />
       <div className="cursor-pointer" onClick={() => setUserId(-1)}>
         back
       </div>

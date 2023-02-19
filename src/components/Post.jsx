@@ -1,4 +1,6 @@
+import { useQueryClient } from "react-query";
 import { txtSlicer } from "../utils/func";
+import CachedEmoji from "./CachedEmoji";
 
 const Post = ({ id, title, body, setPostId }) => {
   return (
