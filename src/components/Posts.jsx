@@ -9,6 +9,7 @@ import Post from "./Post";
 const Posts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
+  const TOTAL = 100;
   // use query
   const getPostList = async () => {
     const { data } = await axios.get(
@@ -24,10 +25,11 @@ const Posts = () => {
   );
 
   const onClickNextHandler = () => {
-    if (currentPage <= 1) return;
+    if (currentPage * limit >= TOTAL) return;
     setCurrentPage((prev) => prev + 1);
   };
   const onClickPrevHandler = () => {
+    if (currentPage <= 1) return;
     setCurrentPage((prev) => prev - 1);
   };
 
@@ -55,11 +57,11 @@ const Posts = () => {
       </div>
       <Pagination
         currentPage={currentPage}
-        lastPage={(100 / limit).toFixed()}
-        total={100}
+        lastPage={(TOTAL / limit).toFixed()}
+        total={TOTAL}
         onClickPrev={onClickPrevHandler}
         onClickNext={onClickNextHandler}
-        isNextBtnDisabled={currentPage === (100 / limit).toFixed()}
+        isNextBtnDisabled={currentPage === (TOTAL / limit).toFixed()}
         isPrevBtnDisabled={currentPage === 1}
       />
     </>
