@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useQuery, useQueryClient } from "react-query";
 import { axiosInstance } from "../api/axios.config";
+import useFetcher from "../hooks/useFetcher";
 import ImageSkeleton from "../shared/imageSkeleton";
 import CachedEmoji from "./CachedEmoji";
 
@@ -18,14 +19,9 @@ const UserDetails = ({ id, setUserId }) => {
   const queryClient = useQueryClient();
   const isCached = queryClient.getQueryData(["user", id]);
   // use query
-  const getUser = async () => {
-    const { data } = await axiosInstance.get(`/users/${id}`);
-    console.log(data);
-    return data;
-  };
-
-  const { isLoading, isError, isFetching, data } = useQuery(["user", id], () =>
-    getUser()
+  const { isLoading, data } = useFetcher(
+    ["user", id],
+    `https://dummyjson.com/users/${id}`
   );
 
   if (isLoading) return <ImageSkeleton isCenter />;

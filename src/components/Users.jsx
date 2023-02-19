@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { axiosInstance } from "../api/axios.config";
+import useFetcher from "../hooks/useFetcher";
 import Checkbox from "../shared/Checkbox/Checkbox";
 import ImageSkeleton from "../shared/imageSkeleton";
 import Select from "../shared/select/Select";
@@ -19,19 +20,25 @@ const Users = () => {
   });
 
   // use query
-  const getUserList = async () => {
-    const { ip, password, domain } = queryParams;
-    const { data } = await axiosInstance.get(
-      `/users?limit=${limit}&select=image${ip}${password}${domain}`
-    );
-    // console.log(data);
-    return data;
-  };
-
-  const { isLoading, isError, isFetching, data } = useQuery(
+  const { ip, password, domain } = queryParams;
+  const { isLoading, data } = useFetcher(
     ["users", queryParams, limit],
-    () => getUserList()
+    `https://dummyjson.com/users?limit=${limit}&select=image${ip}${password}${domain}`
   );
+
+  // const getUserList = async () => {
+  //   const { ip, password, domain } = queryParams;
+  //   const { data } = await axiosInstance.get(
+  //     `/users?limit=${limit}&select=image${ip}${password}${domain}`
+  //   );
+  //   // console.log(data);
+  //   return data;
+  // };
+
+  // const { isLoading, isError, isFetching, data } = useQuery(
+  //   ["users", queryParams, limit],
+  //   () => getUserList()
+  // );
 
   const onQueryParamChanged = (e) => {
     const { name, checked } = e.target;
